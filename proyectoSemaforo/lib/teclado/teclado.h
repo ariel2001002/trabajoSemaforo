@@ -7,8 +7,11 @@ int16_t bot1 = 5;
 int16_t bot2 = 6;
 int16_t bots[] = {bot1, bot2};
 
-enum estado{noPresionado, presionado, bajando, subiendo};
+enum estados{noPresionado, presionado, bajando, subiendo};
+
+estados estado  = noPresionado;
 
 void botonesMEF(int16_t nombreBoton);
+int16_t temporizador1();
 
 #endif
