@@ -14,17 +14,13 @@ estados estadoBot2;
 
 estados estadoActualBotones[] = {estadoBot1, estadoBot2};
 
-//---------------------------------------------------
+//MEFBOTONES---------------------------------------------------
 
 void inicializacionMEF();
-
-int16_t temporizador1();
-
-int16_t temporizador2();
-
-void botonesMEF();
-
+void actualizacionMEF();
 void comprobacion ();
+int16_t temporizador1();
+int16_t temporizador2();
 
 //---------------------------------------------------
 
@@ -37,7 +33,7 @@ void setup() {
 }
 
 void loop() {
-    botonesMEF();
+    actualizacionMEF();
     comprobacion();
 }
 
@@ -58,7 +54,7 @@ void inicializacionMEF(){
     }
 }
 
-void botonesMEF(){
+void actualizacionMEF(){
 
     switch (estadoActualBotones[0])
     {
@@ -192,3 +188,4 @@ void comprobacion(){
     }
 }
 
+//
