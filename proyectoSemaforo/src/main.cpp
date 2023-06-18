@@ -3,9 +3,10 @@
 
 
 void setup() {
-    
+
 }
 
 void loop() {
-
+    botonesMEF();
+    comprobacion();
 }

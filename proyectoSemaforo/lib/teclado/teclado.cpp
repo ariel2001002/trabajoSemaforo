@@ -3,19 +3,19 @@
 
 
 
-void botonesMEF(int16_t nombreBoton){
+void botonesMEF(){
 
     switch (estado)
     {
         case noPresionado:
-            if (!digitalRead(nombreBoton)){
+            if (!digitalRead(bot1)){
                 estado = bajando;
             }
             break;
         
         case bajando:
             if(temporizador1()){
-                if(!digitalRead(nombreBoton)){
+                if(!digitalRead(bot1)){
                     estado = presionado;
                 } else {
                     estado = noPresionado;
@@ -24,14 +24,14 @@ void botonesMEF(int16_t nombreBoton){
             break;
 
         case presionado:
-            if (digitalRead(nombreBoton)){
+            if (digitalRead(bot1)){
                 estado = subiendo;
             }
             break;
 
         case subiendo:
             if(temporizador1()){
-                if(digitalRead(nombreBoton)){
+                if(digitalRead(bot1)){
                     estado = noPresionado;
                 } else {
                     estado = presionado;
@@ -57,7 +57,7 @@ int16_t temporizador1(){
     return 0;
 }
 
-void comprobacion(estados estado){
+void comprobacion(){
     switch (estado)
     {
         case noPresionado:
