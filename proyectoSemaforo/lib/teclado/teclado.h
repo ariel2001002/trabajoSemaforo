@@ -3,19 +3,21 @@
 
 #include "Arduino.h"
 
-int16_t bot1 = 5;
-int16_t bot2 = 6;
-int16_t bots[] = {bot1, bot2};
+//int16_t bot1 = 5;
+//int16_t bot2 = 6;
+//int16_t bots[] = {bot1, bot2};
 
 enum estados{noPresionado, presionado, bajando, subiendo};
 
-estados estado  = noPresionado;
+estados estadoActual;
 
 //SE DECLARAN FUNCIONES
 
-void botonesMEF();
+void inicializacionMEF();
 
 int16_t temporizador1();
+
+void botonesMEF();
 
 void comprobacion ();
 

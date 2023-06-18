@@ -1,43 +1,51 @@
 #include "teclado.h"
 
+void inicializacionMEF(){
+    pinMode(5, INPUT);
+    if(digitalRead(5)){
+        estadoActual = noPresionado;
+    } else {
+        estadoActual = presionado;
+    }
+}
 
 
 
 void botonesMEF(){
 
-    switch (estado)
+    switch (estadoActual)
     {
         case noPresionado:
-            if (!digitalRead(bot1)){
-                estado = bajando;
+            if (!digitalRead(5)){
+                estadoActual = bajando;
             }
-            break;
+        break;
         
         case bajando:
             if(temporizador1()){
-                if(!digitalRead(bot1)){
-                    estado = presionado;
+                if(!digitalRead(5)){
+                    estadoActual = presionado;
                 } else {
-                    estado = noPresionado;
+                    estadoActual = noPresionado;
                 }
             }
-            break;
+        break;
 
         case presionado:
-            if (digitalRead(bot1)){
-                estado = subiendo;
+            if (digitalRead(5)){
+                estadoActual = subiendo;
             }
-            break;
+        break;
 
         case subiendo:
             if(temporizador1()){
-                if(digitalRead(bot1)){
-                    estado = noPresionado;
+                if(digitalRead(5)){
+                    estadoActual = noPresionado;
                 } else {
-                    estado = presionado;
+                    estadoActual = presionado;
                 }
             }
-            break;
+        break;
 
     }
 
@@ -58,14 +66,16 @@ int16_t temporizador1(){
 }
 
 void comprobacion(){
-    switch (estado)
+    switch (estadoActual)
     {
         case noPresionado:
             digitalWrite(13, LOW);
-            break;
+        break;
         case presionado:
             digitalWrite(13, HIGH);
-            break;
+        break;
+        default:
+        break;
     
     }
 }
