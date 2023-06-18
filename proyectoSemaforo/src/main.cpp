@@ -3,8 +3,8 @@
 
 //VARIABLESMEFBOTONES---------------------------------------------------
 
-int16_t bot1 = 5;
-int16_t bot2 = 6;
+const int16_t bot1 = 5;
+const int16_t bot2 = 6;
 
 enum estados{noPresionado, presionado, bajando, subiendo};
 
@@ -15,6 +15,29 @@ estados estadoActualBotones[] = {estadoBot1, estadoBot2};
 
 //VARIABLESMEFLUCES------------------------------------------
 
+enum modos{normal, desconectado, alarma};
+
+modos estadoActualSemaforo;
+
+enum funcionBots{activa, desactivada};
+
+funcionBots funcionBot1;
+funcionBots funcionBot2;
+
+
+const int16_t ledR = 2;
+const int16_t ledA = 3;
+const int16_t ledV = 4;
+
+int16_t leds[] = {ledR, ledA, ledV};
+int16_t len = sizeof(leds)/sizeof(int16_t);  
+
+typedef struct {
+int16_t* pleds;
+int16_t len;
+} controlleds;
+
+controlleds cleds = {leds, len};
 
 
 //MEFBOTONES---------------------------------------------------
@@ -27,7 +50,9 @@ int16_t temporizador2();
 
 //MEFLUCES------------------------------------------------------
 
+void inicializacionMEFSemaforo();
 
+void actualizacionMEFSemaforos();
 
 //---------------------------------------------------
 
@@ -35,12 +60,15 @@ void setup() {
     pinMode(5, INPUT);
     pinMode(2, OUTPUT);
     pinMode(3, OUTPUT);
+    pinMode(4, OUTPUT);
 
     inicializacionMEF();
+    inicializacionMEFSemaforo();
 }
 
 void loop() {
     actualizacionMEF();
+    actualizacionMEFSemaforos();
 }
 
 
@@ -165,6 +193,7 @@ int16_t temporizador2(){
 }
 
 void comprobacion(){
+    //UNICAMENTE DESTINADO A COMPROBAR EL FUNCIONAMIENTO DE LA MEF
     switch (estadoActualBotones[0])
     {
         case noPresionado:
@@ -195,4 +224,98 @@ void comprobacion(){
 }
 
 //MEFLUCES-----------------------------------------------------
+
+void inicializacionMEFSemaforo(){
+    estadoActualSemaforo = normal;
+}
+
+void actualizacionMEFFuncionesBots(){
+
+    static estados estadoPrevioBot1 = estadoActualBotones[0];
+    static estados estadoPrevioBot2 = estadoActualBotones[0];
+
+    switch (funcionBot1)
+    {
+
+
+        case desactivada:
+            if ((estadoActualBotones[0] == presionado)){
+                if((estadoActualBotones[0] != estadoPrevioBot1)){
+                    funcionBot1 = activa;
+                }
+                
+            }
+
+            estadoPrevioBot1 = estadoActualBotones[0];
+            break;
+
+        case activa:
+            funcionBot1 = desactivada;
+
+            break;
+        default:
+            break;
+    }
+
+    switch (funcionBot2)
+    {
+
+
+        case desactivada:
+            if ((estadoActualBotones[1] == presionado)){
+                if((estadoActualBotones[1] != estadoPrevioBot2)){
+                    funcionBot2 = activa;
+                }
+                
+            }
+
+            estadoPrevioBot2 = estadoActualBotones[1];
+            break;
+
+        case activa:
+            funcionBot2 = desactivada;
+
+            break;
+        default:
+            break;
+    }
+
+}
+
+
+void actualizacionMEFSemaforos(){
+
+    switch (estadoActualSemaforo)
+    {
+        case normal:
+            if (funcionBot1 == activa){
+                estadoActualSemaforo = desconectado;
+            }
+            digitalWrite(2, HIGH);
+            break;
+
+        case desconectado:
+            if (funcionBot1 == activa){
+                estadoActualSemaforo = alarma;
+            }
+            digitalWrite(3, HIGH);
+            break;
+
+        case alarma:
+            if (funcionBot1 == activa){
+                estadoActualSemaforo = normal;
+            }
+            digitalWrite(4, HIGH);
+            break;
+        
+        default:
+            break;
+    }
+}
+
+void turnOnNextLed(controlleds nombreLeds){
+
+    
+
+}
 
