@@ -1,11 +1,10 @@
 #include <Arduino.h>
 
 
-//---------------------------------------------------
+//VARIABLESMEFBOTONES---------------------------------------------------
 
 int16_t bot1 = 5;
 int16_t bot2 = 6;
-int16_t bots[] = {bot1, bot2};
 
 enum estados{noPresionado, presionado, bajando, subiendo};
 
@@ -14,6 +13,10 @@ estados estadoBot2;
 
 estados estadoActualBotones[] = {estadoBot1, estadoBot2};
 
+//VARIABLESMEFLUCES------------------------------------------
+
+
+
 //MEFBOTONES---------------------------------------------------
 
 void inicializacionMEF();
@@ -21,6 +24,10 @@ void actualizacionMEF();
 void comprobacion ();
 int16_t temporizador1();
 int16_t temporizador2();
+
+//MEFLUCES------------------------------------------------------
+
+
 
 //---------------------------------------------------
 
@@ -34,7 +41,6 @@ void setup() {
 
 void loop() {
     actualizacionMEF();
-    comprobacion();
 }
 
 
@@ -188,4 +194,5 @@ void comprobacion(){
     }
 }
 
-//
+//MEFLUCES-----------------------------------------------------
+
