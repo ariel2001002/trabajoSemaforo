@@ -312,14 +312,16 @@ void actualizacionMEFSemaforos(){
 
 void lucesModoNormal(int16_t leds, int16_t len){
 
+    static int16_t i = len-1;
+
     if(temporizadorSemaforos(i)){
         i++;
         if (i==len-2)
         {
             i = 0
         }
-        turnOffLeds(leds, len)    
-
+        turnOffLeds(leds, len);    
+        digitalWrite(arreglo[i], HIGH); //DEBO UTILIZAR PUNTEROS DE LOS VALORES, NO SIRVE
     }
 
 }
@@ -327,7 +329,29 @@ void lucesModoNormal(int16_t leds, int16_t len){
 void turnOffLeds(int16_t arreglo, int16_t largoArreglo){
 
   for (int16_t i = 0; i<largoArreglo; i++){
-    digitalWrite(arreglo[i], LOW); 
+    digitalWrite(arreglo[i], LOW); //DEBO UTILIZAR PUNTEROS
   }
 }
+
+int16_t temporizadorSemaforos(int16_t i){
+    static int16_t contador = tiemposModoNormal[i];
+    static int16_t iPrev = tiemposModoNormal[i];
+    
+    if (iPrev != tiemposModoNormal[i]){
+        contador = tiemposModoNormal[i];
+    }
+
+    contador--;
+    delay(1);
+
+    if(contador == 0){
+        i++;
+        return 1;
+    }
+
+    return 0;
+
+}   
+
+
 
