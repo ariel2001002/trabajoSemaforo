@@ -29,16 +29,14 @@ const int16_t ledR = 2;
 const int16_t ledA = 3;
 const int16_t ledV = 4;
 
+const int16_t tiempoLedR = 3000;
+const int16_t tiempoLedA = 500;
+const int16_t tiempoLedV = 2000;
+
 int16_t leds[] = {ledR, ledA, ledV};
 int16_t len = sizeof(leds)/sizeof(int16_t);  
 
-typedef struct {
-int16_t* pleds;
-int16_t len;
-} controlleds;
-
-controlleds cleds = {leds, len};
-
+int16_t tiemposModoNormal[] = {tiempoLedR, tiempoLedA, tiempoLedV};
 
 //MEFBOTONES---------------------------------------------------
 
@@ -282,7 +280,6 @@ void actualizacionMEFFuncionesBots(){
 
 }
 
-
 void actualizacionMEFSemaforos(){
 
     switch (estadoActualSemaforo)
@@ -313,9 +310,24 @@ void actualizacionMEFSemaforos(){
     }
 }
 
-void turnOnNextLed(controlleds nombreLeds){
+void lucesModoNormal(int16_t leds, int16_t len){
 
-    
+    if(temporizadorSemaforos(i)){
+        i++;
+        if (i==len-2)
+        {
+            i = 0
+        }
+        turnOffLeds(leds, len)    
 
+    }
+
+}
+
+void turnOffLeds(int16_t arreglo, int16_t largoArreglo){
+
+  for (int16_t i = 0; i<largoArreglo; i++){
+    digitalWrite(arreglo[i], LOW); 
+  }
 }
 
