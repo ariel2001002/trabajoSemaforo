@@ -13,17 +13,19 @@ estados estadoBot2;
 
 estados estadoActualBotones[] = {estadoBot1, estadoBot2};
 
-//VARIABLESMEFLUCES------------------------------------------
-
-enum modos{normal, desconectado, alarma};
-
-modos estadoActualSemaforo;
-
 enum funcionBots{activa, desactivada};
 
 funcionBots funcionBot1;
 funcionBots funcionBot2;
 
+funcionBots funcionBotones[] = {funcionBot1, funcionBot2};
+
+
+//VARIABLESMEFLUCES------------------------------------------
+
+enum modos{normal, desconectado, alarma};
+
+modos estadoActualSemaforo;
 
 const int16_t ledR = 2;
 const int16_t ledA = 3;
@@ -34,7 +36,14 @@ const int16_t tiempoLedA = 500;
 const int16_t tiempoLedV = 2000;
 
 int16_t leds[] = {ledR, ledA, ledV};
-int16_t len = sizeof(leds)/sizeof(int16_t);  
+int16_t len = sizeof(leds)/sizeof(int16_t);
+
+typedef struct {
+    int16_t* pleds;
+    int16_t len;
+} controlleds;
+
+controlleds cleds = {leds, len};
 
 int16_t tiemposModoNormal[] = {tiempoLedR, tiempoLedA, tiempoLedV};
 
@@ -52,6 +61,16 @@ void inicializacionMEFSemaforo();
 
 void actualizacionMEFSemaforos();
 
+void actualizacionMEFFuncionesBots();
+
+void lucesModoNormal(controlleds nombreLeds);
+
+void turnOffLeds(controlleds nombreLeds);
+
+int16_t temporizadorSemaforos(int16_t i);
+
+void comprovacionFuncionesBots();
+
 //---------------------------------------------------
 
 void setup() {
@@ -66,8 +85,17 @@ void setup() {
 
 void loop() {
     actualizacionMEF();
-    actualizacionMEFSemaforos();
+    actualizacionMEFFuncionesBots();
+
+    if (funcionBot1 == activa){
+        comprovacionFuncionesBots();
+    }
+
+    if (funcionBot2 == activa){
+        comprovacionFuncionesBots();
+    }
 }
+
 
 
 //MEFBOTONES---------------------------------------------------
@@ -84,6 +112,9 @@ void inicializacionMEF(){
     } else {
         estadoActualBotones[1] = presionado;
     }
+
+    funcionBot1 = desactivada;
+    funcionBot2 = desactivada;
 }
 
 void actualizacionMEF(){
@@ -190,52 +221,13 @@ int16_t temporizador2(){
     return 0;
 }
 
-void comprobacion(){
-    //UNICAMENTE DESTINADO A COMPROBAR EL FUNCIONAMIENTO DE LA MEF
-    switch (estadoActualBotones[0])
-    {
-        case noPresionado:
-            digitalWrite(2, LOW);
-        break;
-        case presionado:
-            digitalWrite(2, HIGH);
-        break;
-
-        default:
-        break;
-    
-    }
-
-    switch (estadoActualBotones[1])
-    {
-        case noPresionado:
-            digitalWrite(3, LOW);
-        break;
-        case presionado:
-            digitalWrite(3, HIGH);
-        break;
-
-        default:
-        break;
-    
-    }
-}
-
-//MEFLUCES-----------------------------------------------------
-
-void inicializacionMEFSemaforo(){
-    estadoActualSemaforo = normal;
-}
-
 void actualizacionMEFFuncionesBots(){
 
     static estados estadoPrevioBot1 = estadoActualBotones[0];
-    static estados estadoPrevioBot2 = estadoActualBotones[0];
+    static estados estadoPrevioBot2 = estadoActualBotones[1];
 
     switch (funcionBot1)
     {
-
-
         case desactivada:
             if ((estadoActualBotones[0] == presionado)){
                 if((estadoActualBotones[0] != estadoPrevioBot1)){
@@ -243,8 +235,6 @@ void actualizacionMEFFuncionesBots(){
                 }
                 
             }
-
-            estadoPrevioBot1 = estadoActualBotones[0];
             break;
 
         case activa:
@@ -257,8 +247,6 @@ void actualizacionMEFFuncionesBots(){
 
     switch (funcionBot2)
     {
-
-
         case desactivada:
             if ((estadoActualBotones[1] == presionado)){
                 if((estadoActualBotones[1] != estadoPrevioBot2)){
@@ -267,7 +255,6 @@ void actualizacionMEFFuncionesBots(){
                 
             }
 
-            estadoPrevioBot2 = estadoActualBotones[1];
             break;
 
         case activa:
@@ -278,6 +265,22 @@ void actualizacionMEFFuncionesBots(){
             break;
     }
 
+    estadoPrevioBot1 = estadoActualBotones[0];
+    estadoPrevioBot2 = estadoActualBotones[1];
+
+}
+
+void comprovacionFuncionesBots(){
+    digitalWrite(13, HIGH);
+    delay(500);
+    digitalWrite(13, LOW);
+}
+
+
+//MEFLUCES-----------------------------------------------------
+
+void inicializacionMEFSemaforo(){
+    estadoActualSemaforo = normal;
 }
 
 void actualizacionMEFSemaforos(){
@@ -288,21 +291,18 @@ void actualizacionMEFSemaforos(){
             if (funcionBot1 == activa){
                 estadoActualSemaforo = desconectado;
             }
-            digitalWrite(2, HIGH);
             break;
 
         case desconectado:
             if (funcionBot1 == activa){
                 estadoActualSemaforo = alarma;
             }
-            digitalWrite(3, HIGH);
             break;
 
         case alarma:
             if (funcionBot1 == activa){
                 estadoActualSemaforo = normal;
             }
-            digitalWrite(4, HIGH);
             break;
         
         default:
@@ -310,26 +310,26 @@ void actualizacionMEFSemaforos(){
     }
 }
 
-void lucesModoNormal(int16_t leds, int16_t len){
+void lucesModoNormal(controlleds nombreLeds){
 
-    static int16_t i = len-1;
+    static int16_t i = nombreLeds.len - 1;
 
     if(temporizadorSemaforos(i)){
         i++;
         if (i==len-2)
         {
-            i = 0
+            i = 0;
         }
-        turnOffLeds(leds, len);    
-        digitalWrite(arreglo[i], HIGH); //DEBO UTILIZAR PUNTEROS DE LOS VALORES, NO SIRVE
+        turnOffLeds(cleds);    
+        digitalWrite(*nombreLeds.pleds+i, HIGH); //DEBO UTILIZAR PUNTEROS DE LOS VALORES, NO SIRVE
     }
 
 }
 
-void turnOffLeds(int16_t arreglo, int16_t largoArreglo){
+void turnOffLeds(controlleds nombreLeds){
 
-  for (int16_t i = 0; i<largoArreglo; i++){
-    digitalWrite(arreglo[i], LOW); //DEBO UTILIZAR PUNTEROS
+  for (int16_t i = 0; i<len; i++){
+    digitalWrite(*nombreLeds.pleds+i, LOW); //DEBO UTILIZAR PUNTEROS
   }
 }
 
@@ -352,6 +352,3 @@ int16_t temporizadorSemaforos(int16_t i){
     return 0;
 
 }   
-
-
-
