@@ -93,8 +93,8 @@ void loop() {
     actualizacionMEF();
     actualizacionMEFFuncionesBots();
 
-    inicializacionMEFSemaforo();
     actualizacionMEFSemaforos();
+
 }
 
 
@@ -271,7 +271,6 @@ void actualizacionMEFFuncionesBots(){
 
 }
 
-
 //MEFLUCES-----------------------------------------------------
 
 void inicializacionMEFSemaforo(){
@@ -280,29 +279,45 @@ void inicializacionMEFSemaforo(){
 
 void actualizacionMEFSemaforos(){
 
-    switch (estadoActualSemaforo)
-    {
-        case normal:
-            if (funcionBot1 == activa){
+    if(funcionBot1 == activa){
+
+        switch (estadoActualSemaforo)
+        {
+            case normal:
+                
                 estadoActualSemaforo = desconectado;
                 turnOffLeds(cleds);
                 break;
-            }
 
+            case desconectado:
+
+                estadoActualSemaforo = alarma;
+                turnOffLeds(cleds);
+                break;
+
+            case alarma:
+            
+                estadoActualSemaforo = normal;
+                turnOffLeds(cleds);
+                break;
+            
+            default:
+                break;
+        }
+    }
+
+    switch (estadoActualSemaforo)
+    {
+        case normal:
             lucesModoNormal(cleds);
-
             break;
 
         case desconectado:
-            if (funcionBot1 == activa){
-                estadoActualSemaforo = alarma;
-            }
+
             break;
 
         case alarma:
-            if (funcionBot1 == activa){
-                estadoActualSemaforo = normal;
-            }
+
             break;
         
         default:
