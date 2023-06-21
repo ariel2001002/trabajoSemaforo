@@ -47,13 +47,22 @@ controlleds cleds = {leds, len};
 
 int16_t tiemposModoNormal[] = {tiempoLedR, tiempoLedA, tiempoLedV};
 
+
+enum colores {rojo, amarillo, verde};
+
 //MEFBOTONES---------------------------------------------------
 
 void inicializacionMEF();
+
 void actualizacionMEF();
+
 void comprobacion ();
+
 int16_t temporizador1();
+
 int16_t temporizador2();
+
+void actualizacionMEFFuncionesBots();
 
 //MEFLUCES------------------------------------------------------
 
@@ -61,15 +70,12 @@ void inicializacionMEFSemaforo();
 
 void actualizacionMEFSemaforos();
 
-void actualizacionMEFFuncionesBots();
-
 void lucesModoNormal(controlleds nombreLeds);
 
 void turnOffLeds(controlleds nombreLeds);
 
-int16_t temporizadorSemaforos(int16_t i);
+int16_t temporizadorSemaforos(colores colorActual);
 
-void comprovacionFuncionesBots();
 
 //---------------------------------------------------
 
@@ -87,13 +93,8 @@ void loop() {
     actualizacionMEF();
     actualizacionMEFFuncionesBots();
 
-    if (funcionBot1 == activa){
-        comprovacionFuncionesBots();
-    }
-
-    if (funcionBot2 == activa){
-        comprovacionFuncionesBots();
-    }
+    inicializacionMEFSemaforo();
+    actualizacionMEFSemaforos();
 }
 
 
@@ -270,12 +271,6 @@ void actualizacionMEFFuncionesBots(){
 
 }
 
-void comprovacionFuncionesBots(){
-    digitalWrite(13, HIGH);
-    delay(500);
-    digitalWrite(13, LOW);
-}
-
 
 //MEFLUCES-----------------------------------------------------
 
@@ -290,7 +285,12 @@ void actualizacionMEFSemaforos(){
         case normal:
             if (funcionBot1 == activa){
                 estadoActualSemaforo = desconectado;
+                turnOffLeds(cleds);
+                break;
             }
+
+            lucesModoNormal(cleds);
+
             break;
 
         case desconectado:
@@ -311,19 +311,44 @@ void actualizacionMEFSemaforos(){
 }
 
 void lucesModoNormal(controlleds nombreLeds){
+    static colores colorActual = rojo;
 
-    static int16_t i = nombreLeds.len - 1;
-
-    if(temporizadorSemaforos(i)){
-        i++;
-        if (i==len-2)
+    switch (colorActual)
         {
-            i = 0;
-        }
-        turnOffLeds(cleds);    
-        digitalWrite(*nombreLeds.pleds+i, HIGH); //DEBO UTILIZAR PUNTEROS DE LOS VALORES, NO SIRVE
+        case rojo:
+            digitalWrite(*nombreLeds.pleds, HIGH); 
+            break;
+        case amarillo:
+            digitalWrite(*nombreLeds.pleds+1, HIGH); 
+            break;
+        case verde:
+            digitalWrite(*nombreLeds.pleds+2, HIGH); 
+            break;
+        
+        default:
+            break;
     }
 
+    if(temporizadorSemaforos(colorActual)){
+
+        switch (colorActual)
+        {
+        case rojo:
+            colorActual = verde;
+            break;
+        case amarillo:
+            colorActual = rojo;
+            break;
+        case verde:
+            colorActual = amarillo;
+            break;
+        
+        default:
+            break;
+        }
+
+        turnOffLeds(cleds);    
+    }
 }
 
 void turnOffLeds(controlleds nombreLeds){
@@ -333,22 +358,38 @@ void turnOffLeds(controlleds nombreLeds){
   }
 }
 
-int16_t temporizadorSemaforos(int16_t i){
-    static int16_t contador = tiemposModoNormal[i];
-    static int16_t iPrev = tiemposModoNormal[i];
-    
-    if (iPrev != tiemposModoNormal[i]){
-        contador = tiemposModoNormal[i];
+int16_t temporizadorSemaforos(colores colorActual){
+   
+   static colores colorPrevio = colorActual;
+   static int16_t contador = tiemposModoNormal[0];
+       
+
+    if(colorPrevio != colorActual){
+        switch (colorActual)
+        {
+        case rojo:
+            contador = tiemposModoNormal[0];
+            break;
+        case amarillo:
+            contador = tiemposModoNormal[1];
+            break;
+        case verde:
+            contador = tiemposModoNormal[2];
+            break;
+        default:
+            break;
+        }
     }
 
     contador--;
     delay(1);
+    colorPrevio = colorActual;
 
     if(contador == 0){
-        i++;
         return 1;
     }
 
     return 0;
 
-}   
+}
+ 
