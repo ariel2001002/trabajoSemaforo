@@ -35,6 +35,9 @@ const int16_t tiempoLedR = 3000;
 const int16_t tiempoLedA = 500;
 const int16_t tiempoLedV = 2000;
 
+const int16_t tiemposBase[] = {tiempoLedR, tiempoLedA, tiempoLedV};
+volatile int16_t tiempoModos[] = {tiempoLedR, tiempoLedA, tiempoLedV};
+
 int16_t leds[] = {ledR, ledA, ledV};
 int16_t len = sizeof(leds)/sizeof(int16_t);
 
@@ -44,9 +47,6 @@ typedef struct {
 } controlleds;
 
 controlleds cleds = {leds, len};
-
-int16_t tiemposModoNormal[] = {tiempoLedR, tiempoLedA, tiempoLedV};
-
 
 enum colores {rojo, amarillo, verde};
 
@@ -70,7 +70,13 @@ void inicializacionMEFSemaforo();
 
 void actualizacionMEFSemaforos();
 
+void actualizacioMEFBaseDeTiempo();
+
 void lucesModoNormal(controlleds nombreLeds);
+
+void lucesModoDesconectado(controlleds nombreLeds);
+
+void lucesModoAlarma(controlleds nombreLeds);
 
 void turnOffLeds(controlleds nombreLeds);
 
@@ -93,8 +99,8 @@ void loop() {
     actualizacionMEF();
     actualizacionMEFFuncionesBots();
 
+    actualizacioMEFBaseDeTiempo();
     actualizacionMEFSemaforos();
-
 }
 
 
@@ -313,16 +319,61 @@ void actualizacionMEFSemaforos(){
             break;
 
         case desconectado:
-
+            lucesModoDesconectado(cleds);
             break;
 
         case alarma:
-
+             lucesModoAlarma(cleds);
             break;
         
         default:
             break;
     }
+}
+
+void actualizacioMEFBaseDeTiempo(){
+    enum baseDeTiempo{lento, normal, rapido};
+    static baseDeTiempo baseDeTiempoActual = normal;
+
+    switch (baseDeTiempoActual)
+    {
+        case normal: 
+            if(funcionBot2 == activa){
+                baseDeTiempoActual = rapido;
+            } else{
+                for (int16_t i = 0; i < 3; i++)
+                {
+                    tiempoModos[i] = 1 * tiemposBase[i];
+                }
+                
+            }
+            break;
+        case rapido:
+            if(funcionBot2 == activa){
+                baseDeTiempoActual = lento;
+            } else{
+                for (int16_t i = 0; i < 3; i++)
+                {
+                    tiempoModos[i] = 0.5 * tiemposBase[i];
+                }
+            }
+            break;
+
+        case lento:
+            if(funcionBot2 == activa){
+                baseDeTiempoActual = normal;
+            } else{
+                for (int16_t i = 0; i < 3; i++)
+                {
+                    tiempoModos[i] = 2 * tiemposBase[i];
+                }
+            }
+            break;
+
+        default:
+            break;
+    }
+
 }
 
 void lucesModoNormal(controlleds nombreLeds){
@@ -366,6 +417,38 @@ void lucesModoNormal(controlleds nombreLeds){
     }
 }
 
+void lucesModoDesconectado(controlleds nombreLeds){
+
+    static int16_t estado = 1;
+    static int16_t contador = tiempoModos[1];
+
+    contador--;
+    delay(1);
+
+    if(contador == 0){
+        estado = !estado;
+        contador = tiempoModos[1];
+    }
+
+    digitalWrite(ledA, estado);
+}
+
+void lucesModoAlarma(controlleds nombreLeds){
+
+    static int16_t estado = 1;
+    static int16_t contador = tiempoModos[2];
+
+    contador--;
+    delay(1);
+
+    if(contador == 0){
+        estado = !estado;
+        contador = tiempoModos[2];
+    }
+
+    digitalWrite(ledR, estado);
+}
+
 void turnOffLeds(controlleds nombreLeds){
 
   for (int16_t i = 0; i<len; i++){
@@ -376,20 +459,20 @@ void turnOffLeds(controlleds nombreLeds){
 int16_t temporizadorSemaforos(colores colorActual){
    
    static colores colorPrevio = colorActual;
-   static int16_t contador = tiemposModoNormal[0];
+   static int16_t contador = tiempoModos[0];
        
 
     if(colorPrevio != colorActual){
         switch (colorActual)
         {
         case rojo:
-            contador = tiemposModoNormal[0];
+            contador = tiempoModos[0];
             break;
         case amarillo:
-            contador = tiemposModoNormal[1];
+            contador = tiempoModos[1];
             break;
         case verde:
-            contador = tiemposModoNormal[2];
+            contador = tiempoModos[2];
             break;
         default:
             break;
