@@ -1,24 +1,11 @@
 #include <Arduino.h>
+#include "teclas.h"
 
+//VARIABLESGLOBALES-----------------------------------------
 
-//VARIABLESMEFBOTONES---------------------------------------------------
-
-const int16_t bot1 = 5;
-const int16_t bot2 = 6;
-
-enum estados{noPresionado, presionado, bajando, subiendo};
-
-estados estadoBot1;
-estados estadoBot2;
-
-estados estadoActualBotones[] = {estadoBot1, estadoBot2};
-
-enum funcionBots{activa, desactivada};
-
-funcionBots funcionBot1;
-funcionBots funcionBot2;
-
-funcionBots funcionBotones[] = {funcionBot1, funcionBot2};
+funcionBots estadoFunBot1;
+funcionBots estadoFunBot2;
+funcionBots estadoFuncionesBots[] = {estadoFunBot1, estadoFunBot2};
 
 
 //VARIABLESMEFLUCES------------------------------------------
@@ -49,20 +36,6 @@ typedef struct {
 controlleds cleds = {leds, len};
 
 enum colores {rojo, amarillo, verde};
-
-//MEFBOTONES---------------------------------------------------
-
-void inicializacionMEF();
-
-void actualizacionMEF();
-
-void comprobacion ();
-
-int16_t temporizador1();
-
-int16_t temporizador2();
-
-void actualizacionMEFFuncionesBots();
 
 //MEFLUCES------------------------------------------------------
 
@@ -97,185 +70,13 @@ void setup() {
 
 void loop() {
     actualizacionMEF();
-    actualizacionMEFFuncionesBots();
+    actualizacionMEFFuncionesBots(estadoFuncionesBots);
 
     actualizacioMEFBaseDeTiempo();
     actualizacionMEFSemaforos();
 }
 
 
-
-//MEFBOTONES---------------------------------------------------
-
-void inicializacionMEF(){
-    if(digitalRead(bot1)){
-        estadoActualBotones[0] = noPresionado;
-    } else {
-        estadoActualBotones[0] = presionado;
-    }
-
-    if(digitalRead(bot2)){
-        estadoActualBotones[1] = noPresionado;
-    } else {
-        estadoActualBotones[1] = presionado;
-    }
-
-    funcionBot1 = desactivada;
-    funcionBot2 = desactivada;
-}
-
-void actualizacionMEF(){
-
-    switch (estadoActualBotones[0])
-    {
-        case noPresionado:
-            if (!digitalRead(bot1)){
-                estadoActualBotones[0] = bajando;
-            }
-        break;
-        
-        case bajando:
-            if(temporizador1()){
-                if(!digitalRead(bot1)){
-                    estadoActualBotones[0] = presionado;
-                } else {
-                    estadoActualBotones[0] = noPresionado;
-                }
-            }
-        break;
-
-        case presionado:
-            if (digitalRead(bot1)){
-                estadoActualBotones[0] = subiendo;
-            }
-        break;
-
-        case subiendo:
-            if(temporizador1()){
-                if(digitalRead(bot1)){
-                    estadoActualBotones[0] = noPresionado;
-                } else {
-                    estadoActualBotones[0] = presionado;
-                }
-            }
-        break;
-
-    }
-
-    switch (estadoActualBotones[1])
-    {
-        case noPresionado:
-            if (!digitalRead(bot2)){
-                estadoActualBotones[1] = bajando;
-            }
-        break;
-        
-        case bajando:
-            if(temporizador2()){
-                if(!digitalRead(bot2)){
-                    estadoActualBotones[1] = presionado;
-                } else {
-                    estadoActualBotones[1] = noPresionado;
-                }
-            }
-        break;
-
-        case presionado:
-            if (digitalRead(bot2)){
-                estadoActualBotones[1] = subiendo;
-            }
-        break;
-
-        case subiendo:
-            if(temporizador2()){
-                if(digitalRead(bot2)){
-                    estadoActualBotones[1] = noPresionado;
-                } else {
-                    estadoActualBotones[1] = presionado;
-                }
-            }
-        break;
-
-    }
-
-}
-
-int16_t temporizador1(){
-    static int16_t i = 40;
-    delay(1);
-    i--;
-
-    if(i == 0)
-    {
-        i = 40;
-        return 1;
-    }
-
-    return 0;
-}
-
-int16_t temporizador2(){
-    static int16_t i = 40;
-    delay(1);
-    i--;
-
-    if(i == 0)
-    {
-        i = 40;
-        return 1;
-    }
-
-    return 0;
-}
-
-void actualizacionMEFFuncionesBots(){
-
-    static estados estadoPrevioBot1 = estadoActualBotones[0];
-    static estados estadoPrevioBot2 = estadoActualBotones[1];
-
-    switch (funcionBot1)
-    {
-        case desactivada:
-            if ((estadoActualBotones[0] == presionado)){
-                if((estadoActualBotones[0] != estadoPrevioBot1)){
-                    funcionBot1 = activa;
-                }
-                
-            }
-            break;
-
-        case activa:
-            funcionBot1 = desactivada;
-
-            break;
-        default:
-            break;
-    }
-
-    switch (funcionBot2)
-    {
-        case desactivada:
-            if ((estadoActualBotones[1] == presionado)){
-                if((estadoActualBotones[1] != estadoPrevioBot2)){
-                    funcionBot2 = activa;
-                }
-                
-            }
-
-            break;
-
-        case activa:
-            funcionBot2 = desactivada;
-
-            break;
-        default:
-            break;
-    }
-
-    estadoPrevioBot1 = estadoActualBotones[0];
-    estadoPrevioBot2 = estadoActualBotones[1];
-
-}
 
 //MEFLUCES-----------------------------------------------------
 
@@ -285,7 +86,7 @@ void inicializacionMEFSemaforo(){
 
 void actualizacionMEFSemaforos(){
 
-    if(funcionBot1 == activa){
+    if(estadoFuncionesBots[0] == activa){
 
         switch (estadoActualSemaforo)
         {
@@ -338,7 +139,7 @@ void actualizacioMEFBaseDeTiempo(){
     switch (baseDeTiempoActual)
     {
         case normal: 
-            if(funcionBot2 == activa){
+            if(estadoFuncionesBots[1] == activa){
                 baseDeTiempoActual = rapido;
             } else{
                 for (int16_t i = 0; i < 3; i++)
@@ -349,7 +150,7 @@ void actualizacioMEFBaseDeTiempo(){
             }
             break;
         case rapido:
-            if(funcionBot2 == activa){
+            if(estadoFuncionesBots[1] == activa){
                 baseDeTiempoActual = lento;
             } else{
                 for (int16_t i = 0; i < 3; i++)
@@ -360,7 +161,7 @@ void actualizacioMEFBaseDeTiempo(){
             break;
 
         case lento:
-            if(funcionBot2 == activa){
+            if(estadoFuncionesBots[1] == activa){
                 baseDeTiempoActual = normal;
             } else{
                 for (int16_t i = 0; i < 3; i++)
