@@ -23,11 +23,15 @@ controlleds cleds = {leds, len};
 //FUNCIONES
 void inicializacionMEFSemaforo(){
     estadoActualSemaforo = normal;
+
+    pinMode(ledR, OUTPUT);
+    pinMode(ledA, OUTPUT);
+    pinMode(ledV, OUTPUT);
 }
 
-void actualizacionMEFSemaforos(){
+void actualizacionMEFSemaforos(funcionBots* ptr){
 
-    if(estadoFuncionesBots[0] == activa){
+    if(*ptr == activa){
 
         switch (estadoActualSemaforo)
         {
@@ -73,14 +77,14 @@ void actualizacionMEFSemaforos(){
     }
 }
 
-void actualizacioMEFBaseDeTiempo(){
+void actualizacioMEFBaseDeTiempo(funcionBots* ptr){
     enum baseDeTiempo{lento, normal, rapido};
     static baseDeTiempo baseDeTiempoActual = normal;
 
     switch (baseDeTiempoActual)
     {
         case normal: 
-            if(estadoFuncionesBots[1] == activa){
+            if(*(ptr + 1) == activa){
                 baseDeTiempoActual = rapido;
             } else{
                 for (int16_t i = 0; i < 3; i++)
@@ -91,7 +95,7 @@ void actualizacioMEFBaseDeTiempo(){
             }
             break;
         case rapido:
-            if(estadoFuncionesBots[1] == activa){
+            if(*(ptr + 1) == activa){
                 baseDeTiempoActual = lento;
             } else{
                 for (int16_t i = 0; i < 3; i++)
@@ -102,7 +106,7 @@ void actualizacioMEFBaseDeTiempo(){
             break;
 
         case lento:
-            if(estadoFuncionesBots[1] == activa){
+            if(*(ptr + 1) == activa){
                 baseDeTiempoActual = normal;
             } else{
                 for (int16_t i = 0; i < 3; i++)

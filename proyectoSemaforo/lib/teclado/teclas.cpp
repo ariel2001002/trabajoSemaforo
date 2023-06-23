@@ -36,6 +36,9 @@ void inicializacionMEF(){
         funcionBotones[i] = desactivada;
         estadoPrevioBotones[i] = estadoActualBotones[i];
     }
+
+    pinMode(bot1, INPUT);
+    pinMode(bot2, INPUT);
     
 }
 

@@ -3,4 +3,6 @@
 #include <Arduino.h>
 
 
+enum funcionBots{activa, desactivada};
+
 #endif

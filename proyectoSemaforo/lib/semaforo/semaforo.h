@@ -2,7 +2,7 @@
 #define _SEMAFORO_H
 
 #include <Arduino.h>
-
+#include "funciones.h"
 
 //SE DEFINEN LOS TIPOS DE VARIABLES
 enum modos{normal, desconectado, alarma};
@@ -14,12 +14,14 @@ typedef struct {
 
 enum colores {rojo, amarillo, verde};
 
+//
+
 //SE DECLARAN LAS FUNCIONES
 void inicializacionMEFSemaforo();
 
-void actualizacionMEFSemaforos();
+void actualizacionMEFSemaforos(funcionBots* ptr);
 
-void actualizacioMEFBaseDeTiempo();
+void actualizacioMEFBaseDeTiempo(funcionBots* ptr);
 
 void lucesModoNormal(controlleds nombreLeds);
 

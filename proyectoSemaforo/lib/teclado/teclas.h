@@ -2,13 +2,14 @@
 #define _TECLAS_H
 
 #include "Arduino.h"
+#include "funciones.h"
 
 
 //SE DEFINEN LOS TIPOS DE VARIABLES
 
 enum estados{noPresionado, presionado, bajando, subiendo};
 
-enum funcionBots{activa, desactivada};
+//enum funcionBots{activa, desactivada};
 
 //SE DECLARAN LAS FUNCIONES DE LA LIBRERIA
 
