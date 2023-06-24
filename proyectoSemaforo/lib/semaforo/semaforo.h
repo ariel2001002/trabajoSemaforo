@@ -2,7 +2,7 @@
 #define _SEMAFORO_H
 
 #include <Arduino.h>
-#include "funciones.h"
+#include "tipoDeVariables.h"
 
 //SE DEFINEN LOS TIPOS DE VARIABLES
 

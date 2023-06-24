@@ -2,17 +2,15 @@
 #define _TECLAS_H
 
 #include "Arduino.h"
-#include "funciones.h"
+#include "tipoDeVariables.h"
 
 
 
 //SE DECLARAN LAS FUNCIONES DE LA LIBRERIA
 
-void inicializacionMEF();
+void inicializacionMEFEstadoBotones();
 
-void actualizacionMEF();
-
-void comprobacion ();
+void actualizacionMEFEstadoBotones();
 
 int16_t temporizador1();
 

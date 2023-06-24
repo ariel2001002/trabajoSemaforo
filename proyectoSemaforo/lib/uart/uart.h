@@ -2,7 +2,7 @@
 #define _UART_H
 
 #include "semaforo.h"
-#include "funciones.h"
+#include "tipoDeVariables.h"
 
 void comunicacionCambioModoSem(modos modoActual);
 

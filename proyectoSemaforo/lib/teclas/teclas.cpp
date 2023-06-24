@@ -19,7 +19,7 @@ funcionBots funcionBot2;
 
 funcionBots funcionBotones[] = {funcionBot1, funcionBot2};
 
-void inicializacionMEF(){
+void inicializacionMEFEstadoBotones(){
     if(digitalRead(bot1)){
         estadoActualBotones[0] = noPresionado;
     } else {
@@ -43,7 +43,7 @@ void inicializacionMEF(){
     
 }
 
-void actualizacionMEF(){
+void actualizacionMEFEstadoBotones(){
 
     switch (estadoActualBotones[0])
     {

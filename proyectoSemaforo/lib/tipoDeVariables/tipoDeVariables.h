@@ -1,5 +1,5 @@
-#ifndef _FUNCIONES_H
-#define _FUNCIONES_H
+#ifndef _TIPOSDEVARIABLE_H
+#define _TIPOSDEVARIABLE_H
 #include <Arduino.h>
 
 

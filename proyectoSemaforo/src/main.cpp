@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "teclas.h"
 #include "semaforo.h"
-#include "funciones.h"
+#include "tipoDeVariables.h"
 #include "uart.h"
 
 
@@ -15,12 +15,12 @@ funcionBots estadoFuncionesBots[] = {estadoFunBot1, estadoFunBot2};
 
 void setup() {
     Serial.begin(9600);
-    inicializacionMEF();
+    inicializacionMEFEstadoBotones();
     inicializacionMEFSemaforo();
 }
 
 void loop() {
-    actualizacionMEF();
+    actualizacionMEFEstadoBotones();
     actualizacionMEFFuncionesBots(estadoFuncionesBots);
 
     actualizacioMEFBaseDeTiempo(estadoFuncionesBots);
