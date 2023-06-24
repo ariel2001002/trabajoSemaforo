@@ -3,9 +3,7 @@
 
 #include "Arduino.h"
 #include "funciones.h"
-#include "uart.h"
 
-enum estados{noPresionado, presionado, bajando, subiendo};
 
 
 //SE DECLARAN LAS FUNCIONES DE LA LIBRERIA

@@ -7,4 +7,6 @@ enum funcionBots{activa, desactivada};
 
 enum modos{normal, desconectado, alarma};
 
+enum estados{noPresionado, presionado, bajando, subiendo};
+
 #endif
