@@ -1,4 +1,5 @@
 #include "teclas.h"
+#include "uart.h"
 
 
 const int16_t bot1 = 5;
