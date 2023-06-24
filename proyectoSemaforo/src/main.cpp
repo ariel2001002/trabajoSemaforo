@@ -2,6 +2,7 @@
 #include "teclas.h"
 #include "semaforo.h"
 #include "funciones.h"
+#include "uart.h"
 
 
 
