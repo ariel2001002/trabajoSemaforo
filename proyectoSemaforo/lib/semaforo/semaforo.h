@@ -5,7 +5,6 @@
 #include "funciones.h"
 
 //SE DEFINEN LOS TIPOS DE VARIABLES
-enum modos{normal, desconectado, alarma};
 
 typedef struct {
     int16_t* pleds;

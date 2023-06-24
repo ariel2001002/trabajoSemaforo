@@ -1,4 +1,5 @@
 #include "semaforo.h"
+#include "uart.h"
 
 
 //DECLARACION DE VARIABLES
@@ -10,8 +11,6 @@ const int16_t tiempoLedR = 3000;
 const int16_t tiempoLedA = 500;
 const int16_t tiempoLedV = 2000;
 
-modos estadoActualSemaforo;
-
 const int16_t tiemposBase[] = {tiempoLedR, tiempoLedA, tiempoLedV};
 volatile int16_t tiempoModos[] = {tiempoLedR, tiempoLedA, tiempoLedV};
 
@@ -19,6 +18,8 @@ int16_t leds[] = {ledR, ledA, ledV};
 int16_t len = sizeof(leds)/sizeof(int16_t);
 
 controlleds cleds = {leds, len};
+
+modos estadoActualSemaforo;
 
 //FUNCIONES
 void inicializacionMEFSemaforo(){
@@ -75,6 +76,8 @@ void actualizacionMEFSemaforos(funcionBots* ptr){
         default:
             break;
     }
+
+    comunicacionCambioModoSem(estadoActualSemaforo);
 }
 
 void actualizacioMEFBaseDeTiempo(funcionBots* ptr){
