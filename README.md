@@ -1,6 +1,8 @@
 # trabajoSemaforo
 Asignatura: Control Digital
 
+INPORTANTE: La versión final del proyecto se encuentra en el branch "programación-librería-UART"
+
 El presente código es el algoritmo de funcionamiento de un semáforo de una vía con controlador de modo de operación y tiempo. El hardware se compone de dos pulsantes, uno destinado al control de modo de operación y otro al control de la base e tiempo de cada modo. El funcionamiento es el solicitado en la guía de actividad.
 
 
