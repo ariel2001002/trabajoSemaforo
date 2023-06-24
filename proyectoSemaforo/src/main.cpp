@@ -3,11 +3,14 @@
 #include "semaforo.h"
 #include "funciones.h"
 
+
+
 //VARIABLESGLOBALES-----------------------------------------
 
 funcionBots estadoFunBot1;
 funcionBots estadoFunBot2;
 funcionBots estadoFuncionesBots[] = {estadoFunBot1, estadoFunBot2};
+
 
 void setup() {
     inicializacionMEF();
