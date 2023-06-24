@@ -7,6 +7,4 @@
 
 void comunicacionCambioModoSem(modos modoActual);
 
-void comunicacionCambioEstadoBots(estados estadoActual, int16_t boton);
-
 #endif

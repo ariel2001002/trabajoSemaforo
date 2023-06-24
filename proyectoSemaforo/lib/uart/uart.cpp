@@ -32,41 +32,4 @@ void comunicacionCambioModoSem(modos modoActual){
     
 }
 
-void comunicacionCambioEstadoBots(estados estadoActual, int16_t boton){
-    static estados estadoPrev = estadoActual;
-
-
-    if (estadoActual != estadoPrev)
-    {
-        if (estadoActual == noPresionado)
-        {
-            Serial.print("Botón presionado: ");
-            if (boton == 5){
-                Serial.println("Botón 1");
-            } else if(boton == 6) {
-                Serial.println("Botón 2");
-            }
-
-            Serial.print("Estado MEF antirrebote: ");
-            Serial.println("No Presionado");    
-        }
-        if (estadoActual == presionado)
-        {
-            Serial.print("Botón presionado: ");
-            if (boton == 5){
-                Serial.println("Botón 1");
-            } else if(boton == 6) {
-                Serial.println("Botón 2");
-            }
-
-            Serial.print("Estado MEF antirrebote: ");
-            Serial.println("Presionado");    
-        }
-        
-    }
-
-    estadoPrev = estadoActual;
-    
-    
-}
 
