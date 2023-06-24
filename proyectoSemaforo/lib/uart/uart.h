@@ -3,7 +3,7 @@
 
 #include "funciones.h"
 
-void comunicacion();
+
 
 
 #endif
