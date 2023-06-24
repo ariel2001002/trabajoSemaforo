@@ -13,8 +13,6 @@ typedef struct {
 
 enum colores {rojo, amarillo, verde};
 
-//
-
 //SE DECLARAN LAS FUNCIONES
 void inicializacionMEFSemaforo();
 
